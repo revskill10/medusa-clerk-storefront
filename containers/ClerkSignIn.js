@@ -6,9 +6,7 @@ const ClerkSignedIn = ({ children }) => {
     const auth = useAuth()
     useEffect(() => {
         if (auth.isSignedIn) {
-            client.post('/store/clerk/auth', {}, {
-                withCredentials: true
-            })
+            client.post('/store/clerk/auth', {})
             .then(console.log)
             .catch(console.log)
         }
