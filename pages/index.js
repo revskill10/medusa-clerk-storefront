@@ -3,7 +3,7 @@ import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { withServerSideAuth } from "@clerk/nextjs/ssr";
 import React from "react";
 import Link from "next/link";
-
+import { client } from "../lib/client";
 export const getServerSideProps = withServerSideAuth();
 
 const ClerkFeatures = () => (
@@ -158,26 +158,28 @@ const APIRequest = () => {
       window.Prism.highlightAll();
     }
   });
-  const [response, setResponse] = React.useState("// Click above to run the request");
-  const makeRequest = async () => {
-    setResponse("// Loading...");
+  const [medusaResponse, setMedusaResponse] = React.useState("// Click");
 
+  const makeMedusaRequest = async () => {
+    setMedusaResponse("// Loading...");
     try {
-      const res = await fetch("/api/getAuthenticatedUserId");
-      const body = await res.json();
-      setResponse(JSON.stringify(body, null, "  "));
+      const res = await client({
+        method: "GET",
+        url: "/store/customers/me",
+      })
+      setMedusaResponse(JSON.stringify(res.data, null, " "));
     } catch (e) {
-      setResponse("// There was an error with the request. Please contact support@clerk.dev");
+      setMedusaResponse("// Error" + e.message)
     }
-  };
+  }
   return (
     <div className={styles.backend}>
       <h2>API request example</h2>
       <div className={styles.card}>
-        <button target="_blank" rel="noopener" className={styles.cardContent} onClick={() => makeRequest()}>
+        <button target="_blank" rel="noopener" className={styles.cardContent} onClick={() => makeMedusaRequest()}>
           <img src="/icons/server.svg" />
           <div>
-            <h3>fetch('/api/getAuthenticatedUserId')</h3>
+            <h3>fetch('/store/customers/me')</h3>
             <p>Retrieve the user ID of the signed in user, or null if there is no user</p>
           </div>
           <div className={styles.arrow}>
@@ -192,10 +194,17 @@ const APIRequest = () => {
           <SignedOut>You are signed out, so the request will return null</SignedOut>
         </em>
       </h4>
+      <h4>
+        Medusa Response
+        <em>
+          <SignedIn>You are signed in, so the request will return your user ID</SignedIn>
+          <SignedOut>You are signed out, so the request will return null</SignedOut>
+        </em>
+      </h4>
       <pre>
-        <code className="language-js">{response}</code>
+        <code className="language-js">{medusaResponse}</code>
       </pre>
-      <h4>pages/api/getAuthenticatedUserId.js</h4>
+      <h4>customers/me.js</h4>
       <pre>
         <code className="language-js">{apiSample}</code>
       </pre>

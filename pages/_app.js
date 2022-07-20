@@ -4,7 +4,8 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
 import Script from "next/script";
-import Layout from "/components/Layout";
+import Layout from "../components/Layout";
+import Auth from '../containers/ClerkSignIn'
 
 /**
  * List pages you want to be publicly accessible, or leave empty if
@@ -39,7 +40,9 @@ const MyApp = ({ Component, pageProps }) => {
         ) : (
           <>
             <SignedIn>
+              <Auth>
               <Component {...pageProps} />
+              </Auth>
             </SignedIn>
             <SignedOut>
               <main>
