@@ -4,6 +4,7 @@ import { withServerSideAuth } from "@clerk/nextjs/ssr";
 import React from "react";
 import Link from "next/link";
 import { client } from "../lib/client";
+import { baseURL } from "../lib/baseURL";
 export const getServerSideProps = withServerSideAuth();
 
 const ClerkFeatures = () => (
@@ -163,17 +164,19 @@ const APIRequest = () => {
   const makeMedusaRequest = async () => {
     setMedusaResponse("// Loading...");
     try {
-      const res = await client({
-        method: "GET",
-        url: "/store/customers/me",
-      })
-      setMedusaResponse(JSON.stringify(res.data, null, " "));
+      const res = await fetch(`${baseURL}/store/customers/me`, {
+        mode: 'cors',
+        credentials: 'include',
+        headers: { 'Accept': 'application/json' }
+      }).catch(err => setMedusaResponse(JSON.stringify(err.message), null, " "))
+      setMedusaResponse(JSON.stringify(res, null, " "));
     } catch (e) {
       setMedusaResponse("// Error" + e.message)
     }
   }
   return (
     <div className={styles.backend}>
+      <Link href="/test">Test</Link>
       <h2>API request example</h2>
       <div className={styles.card}>
         <button target="_blank" rel="noopener" className={styles.cardContent} onClick={() => makeMedusaRequest()}>

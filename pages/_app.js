@@ -6,6 +6,7 @@ import Link from "next/link";
 import Script from "next/script";
 import Layout from "../components/Layout";
 import Auth from '../containers/ClerkSignIn'
+import { Hydrate } from "react-query"
 
 /**
  * List pages you want to be publicly accessible, or leave empty if
@@ -36,14 +37,16 @@ const MyApp = ({ Component, pageProps }) => {
       <Script src="https://cdn.jsdelivr.net/npm/prismjs@1/plugins/autoloader/prism-autoloader.min.js" />
       <Layout>
         {publicPages.includes(router.pathname) ? (
-          <Auth>
+            <Hydrate state={pageProps.dehydratedState}>
           <Component {...pageProps} />
-          </Auth>
+          </Hydrate>
         ) : (
           <>
             <SignedIn>
               <Auth>
+              <Hydrate state={pageProps.dehydratedState}>
               <Component {...pageProps} />
+              </Hydrate>
               </Auth>
             </SignedIn>
             <SignedOut>
