@@ -37,9 +37,7 @@ const MyApp = ({ Component, pageProps }) => {
       <Script src="https://cdn.jsdelivr.net/npm/prismjs@1/plugins/autoloader/prism-autoloader.min.js" />
       <Layout>
         {publicPages.includes(router.pathname) ? (
-            <Hydrate state={pageProps.dehydratedState}>
           <Component {...pageProps} />
-          </Hydrate>
         ) : (
           <>
             <SignedIn>
